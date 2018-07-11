@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+group 'de.webtwob'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.10
+ext.moduleName = "de.webtwob.the.base.game.base"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    compile project(':the.base.game.api')
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

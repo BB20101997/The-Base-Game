@@ -1,0 +1,8 @@
+rootProject.name = 'the.base.game'
+include 'de.webtwob.the.base.game.api'
+findProject(':de.webtwob.the.base.game.api')?.name = 'the.base.game.api'
+include 'de.webtwob.the.base.game.base'
+findProject(':de.webtwob.the.base.game.base')?.name = 'the.base.game.base'
+include 'de.webtwob.the.base.game.main'
+findProject(':de.webtwob.the.base.game.main')?.name = 'the.base.game.main'
+
