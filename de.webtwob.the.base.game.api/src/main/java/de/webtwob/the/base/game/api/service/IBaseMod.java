@@ -6,10 +6,10 @@ import java.util.Collections;
 /**
  * Created by BB20101997 on 10. Jul. 2018.
  */
-public abstract class IBaseMod implements IMod {
+public interface IBaseMod extends IMod {
 
     @Override
-    public final Collection<String> getRequiredModIDs() {
+    default Collection<String> getRequiredModIDs() {
         return Collections.emptyList();
     }
 }
