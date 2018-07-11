@@ -1,5 +1,7 @@
 package de.webtwob.the.base.game.api.service;
 
+import de.webtwob.the.base.game.api.IGameInstance;
+
 import java.util.Collection;
 import java.util.Collections;
 
@@ -12,4 +14,10 @@ public interface IBaseMod extends IMod {
     default Collection<String> getRequiredModIDs() {
         return Collections.emptyList();
     }
+
+    IGameInstance.IClientInstance getClientInstance();
+
+    IGameInstance.IServerInstance getServerInstance();
+
+
 }

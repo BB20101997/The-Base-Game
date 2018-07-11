@@ -9,7 +9,16 @@ public interface IGameInstance {
 
     IMod getBaseMod();
 
-    interface IClientInstance extends IGameInstance{}
-    interface IServerInstance extends IGameInstance{}
+    interface IClientInstance extends IGameInstance{
+
+        IRenderer getRenderer();
+
+    }
+
+    interface IServerInstance extends IGameInstance{
+
+        IGameLogic getGameLogic();
+
+    }
 
 }

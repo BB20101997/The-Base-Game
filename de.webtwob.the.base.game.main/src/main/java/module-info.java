@@ -6,6 +6,9 @@ module de.webtwob.the.base.game.main {
     requires org.lwjgl;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
+    requires de.webtwob.the.base.game.api;
+
+    uses de.webtwob.the.base.game.api.service.IBaseMod;
 
     exports de.webtwob.the.base.game.main;
 

@@ -1,24 +1,19 @@
 package de.webtwob.the.base.game.main;
 
-import org.lwjgl.Version;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.system.MemoryStack;
+import de.webtwob.the.base.game.api.gui.GLFW_MainThreadContext;
+import de.webtwob.the.base.game.api.gui.GLFW_Window;
+import de.webtwob.the.base.game.api.service.IBaseMod;
 
-import java.nio.IntBuffer;
-
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import java.util.ServiceLoader;
 
 /**
  * Created by BB20101997 on 10. Jul. 2018.
  */
 public class MainClient {
 
-    private long window;
+    private GLFW_Window window;
+
+    private System.Logger logger = System.getLogger(MainClient.class.getName());
 
     public static void main(String[] args) {
 
@@ -27,77 +22,44 @@ public class MainClient {
     }
 
     private void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
-        init();
-        loop();
-        Callbacks.glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
+        logger.log(System.Logger.Level.TRACE, "Starting Client");
 
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        window = GLFW_Window.createWindow("The Base Game!");
 
-    }
+        window.runWithMainThreadContext((GLFW_MainThreadContext main) -> main.setVisible(true));
 
-    private void loop() {
-        GL.createCapabilities();
+        ServiceLoader.load(IBaseMod.class).findFirst().ifPresentOrElse(mod -> {
+            logger.log(System.Logger.Level.INFO, () -> "Choose Base Mod: " + mod.getModId());
 
-        glClearColor(1f, 0f, 0f, 0f);
+            var renderer = mod.getClientInstance().getRenderer();
 
-        while (!glfwWindowShouldClose(window)){
-            glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-            glfwSwapBuffers(window);
+            var renderThread = new Thread(() -> renderer.runRenderLoop(window));
+            renderThread.setDaemon(false);
+            renderThread.setName("CLIENT-RENDER-THREAD");
+            renderThread.start();
+            logger.log(System.Logger.Level.INFO, "Client Running!");
 
-            glfwPollEvents();
-        }
-
-    }
-
-
-    @SuppressWarnings({"squid:S2095","squid:S106"})
-    private void init() {
-
-        GLFWErrorCallback.createPrint(System.err).set();
-
-        if (!glfwInit()) {
-            throw new IllegalStateException("Unable to init GLFW!");
-        }
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-
-        window = glfwCreateWindow(300, 300, "The Base Game!", NULL, NULL);
-
-        if (window == NULL) {
-            throw new RuntimeException("Window creation failed!");
-        }
-
-        glfwSetKeyCallback(window, (window, key, scancode, action, mode) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-                glfwSetWindowShouldClose(window, true);
-            }
+            new Thread(() -> {
+                while (renderThread.isAlive()) {
+                    try {
+                        renderThread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                window.runWithMainThreadContext(GLFW_MainThreadContext::destroy);
+                System.exit(0);
+            }).start();
+        }, () -> {
+            logger.log(System.Logger.Level.ERROR, "No IBaseMod found!");
+            System.exit(0);
         });
 
-        try (MemoryStack stack = MemoryStack.stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1);
-            IntBuffer pHeight = stack.mallocInt(1);
+    }
 
-            glfwGetWindowSize(window, pWidth, pHeight);
-
-            GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-            if (vidMode != null) {
-                glfwSetWindowPos(window, (vidMode.width() - pWidth.get(0)) / 2,
-                                 (vidMode.height() - pHeight.get(0)) / 2
-                );
-            }
-
-        }
-
-        glfwMakeContextCurrent(window);
-        glfwSwapInterval(2);
-        glfwShowWindow(window);
-
+    @SuppressWarnings({"squid:S2095", "squid:S106"})
+    private void init() {
     }
 
 }

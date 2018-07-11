@@ -46,7 +46,6 @@ subprojects {
         compile "org.lwjgl:lwjgl-opengl:$lwjglVersion"
         compile "org.lwjgl:lwjgl-opengles:$lwjglVersion"
         compile "org.lwjgl:lwjgl-openvr:$lwjglVersion"
-        //compile "org.lwjgl:lwjgl-ovr:$lwjglVersion"
         compile "org.lwjgl:lwjgl-par:$lwjglVersion"
         compile "org.lwjgl:lwjgl-remotery:$lwjglVersion"
         compile "org.lwjgl:lwjgl-rpmalloc:$lwjglVersion"
@@ -73,7 +72,6 @@ subprojects {
         compile "org.lwjgl:lwjgl-opengl:$lwjglVersion:$lwjglNatives"
         compile "org.lwjgl:lwjgl-opengles:$lwjglVersion:$lwjglNatives"
         compile "org.lwjgl:lwjgl-openvr:$lwjglVersion:$lwjglNatives"
-        //compile "org.lwjgl:lwjgl-ovr:$lwjglVersion:$lwjglNatives"
         compile "org.lwjgl:lwjgl-par:$lwjglVersion:$lwjglNatives"
         compile "org.lwjgl:lwjgl-remotery:$lwjglVersion:$lwjglNatives"
         compile "org.lwjgl:lwjgl-rpmalloc:$lwjglVersion:$lwjglNatives"
@@ -87,13 +85,16 @@ subprojects {
         compile "org.lwjgl:lwjgl-zstd:$lwjglVersion:$lwjglNatives"
         compile "org.joml:joml:${jomlVersion}"
 
+        compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.0'
+        compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.0'
+
         testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 
     //https://guides.gradle.org/building-java-9-modules/
 
     afterEvaluate {
-      tasks.withType(JavaCompile) {
+        tasks.withType(JavaCompile) {
             inputs.property("moduleName", moduleName)
             doFirst {
                 options.compilerArgs = [
