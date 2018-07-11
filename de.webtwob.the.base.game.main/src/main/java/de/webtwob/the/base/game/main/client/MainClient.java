@@ -1,4 +1,4 @@
-package de.webtwob.the.base.game.main;
+package de.webtwob.the.base.game.main.client;
 
 import de.webtwob.the.base.game.api.gui.GLFW_MainThreadContext;
 import de.webtwob.the.base.game.api.gui.GLFW_Window;
@@ -32,34 +32,19 @@ public class MainClient {
         ServiceLoader.load(IBaseMod.class).findFirst().ifPresentOrElse(mod -> {
             logger.log(System.Logger.Level.INFO, () -> "Choose Base Mod: " + mod.getModId());
 
-            var renderer = mod.getClientInstance().getRenderer();
+            var renderThread = new ClientRenderThread();
 
-            var renderThread = new Thread(() -> renderer.runRenderLoop(window));
-            renderThread.setDaemon(false);
-            renderThread.setName("CLIENT-RENDER-THREAD");
-            renderThread.start();
+            renderThread.setChild(mod.getClientInstance().getRenderer());
+
+            renderThread.start(window);
+
             logger.log(System.Logger.Level.INFO, "Client Running!");
 
-            new Thread(() -> {
-                while (renderThread.isAlive()) {
-                    try {
-                        renderThread.join();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                window.runWithMainThreadContext(GLFW_MainThreadContext::destroy);
-                System.exit(0);
-            }).start();
         }, () -> {
             logger.log(System.Logger.Level.ERROR, "No IBaseMod found!");
             System.exit(0);
         });
 
-    }
-
-    @SuppressWarnings({"squid:S2095", "squid:S106"})
-    private void init() {
     }
 
 }

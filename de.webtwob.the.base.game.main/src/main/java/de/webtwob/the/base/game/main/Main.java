@@ -1,6 +1,8 @@
 package de.webtwob.the.base.game.main;
 
 import de.webtwob.the.base.game.api.MainThreadQueue;
+import de.webtwob.the.base.game.main.client.MainClient;
+import de.webtwob.the.base.game.main.server.MainServer;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 

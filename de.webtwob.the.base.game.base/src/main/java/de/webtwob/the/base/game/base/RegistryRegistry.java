@@ -39,6 +39,7 @@ public class RegistryRegistry implements IRegistry<IRegistry> {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends IRegistrateable> IRegistry<T> getByClass(Class<T> clazz){
         IRegistry<?> res = registryMap.get(clazz);
         var regClazz = res.getRegistryTypeClass();
