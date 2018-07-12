@@ -12,7 +12,7 @@ public class GLFW_KeyCallbackContext {
     public final int         mod;
 
     GLFW_KeyCallbackContext(final long windowId, final int key, final int scancode, final int action, final int mod) {
-        window = new GLFW_Window(windowId);
+        window = GLFW_Window.getWindowForId(windowId);
         this.key = key;
         this.scancode = scancode;
         this.action = action;

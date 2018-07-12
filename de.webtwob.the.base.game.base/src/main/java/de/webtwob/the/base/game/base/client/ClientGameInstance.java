@@ -14,13 +14,15 @@ public class ClientGameInstance implements IGameInstance.IClientInstance {
 
     private       RegistryRegistry masterRegistry;
     private final IBaseMod         baseMode;
+    private IRenderer renderer = new TheBaseGameRenderer();
 
     public static ClientGameInstance createInstance(IBaseMod baseMode){
         return new ClientGameInstance(baseMode);
     }
 
     private ClientGameInstance(final IBaseMod baseMode) {
-        this.baseMode = baseMode;}
+        this.baseMode = baseMode;
+    }
 
     @Override
     public IMod getBaseMod() {
@@ -29,6 +31,6 @@ public class ClientGameInstance implements IGameInstance.IClientInstance {
 
     @Override
     public IRenderer getRenderer() {
-        return new TheBaseGameRenderer();
+        return renderer;
     }
 }

@@ -1,9 +1,12 @@
 package de.webtwob.the.base.game.api;
 
+import de.webtwob.the.base.game.api.gui.GLFW_KeyCallbackContext;
 import de.webtwob.the.base.game.api.gui.GLFW_MainThreadContext;
 import de.webtwob.the.base.game.api.gui.GLFW_Window;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
+
+import java.util.function.Consumer;
 
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
@@ -25,18 +28,12 @@ public interface IRenderer {
 
     default void init(GLFW_Window window) {
 
-        window.runWithMainThreadContext(main -> {
-            main.setKeyCallback(context -> {
-                if (context.key == GLFW_KEY_ESCAPE && context.action == GLFW_RELEASE) {
-                    context.window.setShouldClose(true);
-                }
-            });
-        });
+        window.runWithMainThreadContext((Consumer<GLFW_MainThreadContext>) main -> main.setKeyCallback(this::keyCallBack));
 
         GL.createCapabilities();
     }
 
-    default void destroy(GLFW_Window window){
+    default void destroy(GLFW_Window window) {
 
     }
 
@@ -63,7 +60,13 @@ public interface IRenderer {
         LOGGER.log(System.Logger.Level.INFO, "Renderer finished!");
     }
 
-    default void handleInput(GLFW_Window window){
+    default void keyCallBack(GLFW_KeyCallbackContext context) {
+        if (context.key == GLFW_KEY_ESCAPE && context.action == GLFW_RELEASE) {
+            context.window.setShouldClose(true);
+        }
+    }
+
+    default void handleInput(GLFW_Window window) {
         MainThreadQueue.waitAndInvoke(GLFW::glfwPollEvents);
     }
 }

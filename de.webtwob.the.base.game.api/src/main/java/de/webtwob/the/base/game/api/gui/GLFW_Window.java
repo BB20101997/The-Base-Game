@@ -3,8 +3,9 @@ package de.webtwob.the.base.game.api.gui;
 import de.webtwob.the.base.game.api.MainThreadQueue;
 import de.webtwob.the.base.game.api.exceptions.GLFWInitFailException;
 import de.webtwob.the.base.game.api.util.RequireMainThread;
-import de.webtwob.the.base.game.api.util.Unsafe;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -17,6 +18,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
  */
 public class GLFW_Window {
 
+    static final Map<Long,GLFW_Window> windowMap = new HashMap<>();
+
     private static final int           TRUE   = GLFW_TRUE;
     private static final int           FALSE  = GLFW_FALSE;
     private static       System.Logger logger = System.getLogger(GLFW_Window.class.getName());
@@ -25,9 +28,12 @@ public class GLFW_Window {
     private int width;
     private int height;
 
-    @Unsafe
-    GLFW_Window(long windowId) {
-        this.windowId = windowId;
+    private Color backgroundColor = new Color(1,1,1,0);
+
+
+
+    static GLFW_Window getWindowForId(long windowId){
+        return windowMap.get(windowId);
     }
 
     private GLFW_Window(String title) {
@@ -42,6 +48,8 @@ public class GLFW_Window {
             glfwWindowHint(GLFW_VISIBLE, FALSE);
 
             windowId = glfwCreateWindow(300, 300, title, NULL, NULL);
+
+            windowMap.put(windowId,this);
 
             var vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
@@ -65,6 +73,14 @@ public class GLFW_Window {
 
     public void setShouldClose(boolean shouldClose){
         glfwSetWindowShouldClose(windowId,shouldClose);
+    }
+
+    public Color getBackgroundColor(){
+        return backgroundColor;
+    }
+
+    public void setBackgroundColor(Color backgroundColor){
+        this.backgroundColor = backgroundColor;
     }
 
     public GLFW_WindowContext makeContextCurrent() {

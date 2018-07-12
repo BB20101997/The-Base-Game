@@ -23,6 +23,7 @@ public class GLFW_MainThreadContext {
     }
 
     public void destroy() {
+        GLFW_Window.windowMap.remove(window.windowId);
         Callbacks.glfwFreeCallbacks(window.windowId);
         glfwDestroyWindow(window.windowId);
     }
