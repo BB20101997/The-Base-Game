@@ -1,0 +1,50 @@
+<root>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String, java.lang.String) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String, java.lang.String, java.lang.String) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String, java.lang.String, java.lang.String) 1'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String, java.lang.String, java.lang.String) 2'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID RegistryID(java.lang.String, java.lang.String, java.lang.String, java.lang.String) 3'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID categoryID'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID java.lang.String categoryID()'>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID java.lang.String modID()'>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID java.lang.String objectID()'>
+        <annotation name='org.jetbrains.annotations.Contract'>
+            <val name="pure" val="true"/>
+        </annotation>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID modID'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID objectID'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+    <item name='de.webtwob.the.base.game.api.util.RegistryID registryID'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+</root>

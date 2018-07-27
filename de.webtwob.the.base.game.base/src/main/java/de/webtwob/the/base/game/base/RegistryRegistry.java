@@ -1,9 +1,10 @@
 package de.webtwob.the.base.game.base;
 
-import de.webtwob.the.base.game.api.IGameInstance;
-import de.webtwob.the.base.game.api.service.IMod;
-import de.webtwob.the.base.game.api.IRegistrateable;
-import de.webtwob.the.base.game.api.IRegistry;
+import de.webtwob.the.base.game.api.interfaces.IGameInstance;
+import de.webtwob.the.base.game.api.interfaces.IRegistrable;
+import de.webtwob.the.base.game.api.interfaces.IRegistry;
+import de.webtwob.the.base.game.api.util.RegistryID;
+import de.webtwob.the.base.game.base.util.BasicRegistry;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,58 +12,38 @@ import java.util.Map;
 /**
  * Created by BB20101997 on 10. Jul. 2018.
  */
-public class RegistryRegistry implements IRegistry<IRegistry> {
+public class RegistryRegistry extends BasicRegistry<IRegistry> {
 
-    private Map<Class<?>,IRegistry<?>> registryMap       = new HashMap<>();
-    private Map<String, IRegistry<?>>  stringRegistryMap = new HashMap<>();
-    private IGameInstance              instance;
+    private Map<Class<?>, IRegistry<?>> classRegistryMap = new HashMap<>();
+    private IGameInstance               instance;
 
-    public RegistryRegistry(IGameInstance instance){
+    public RegistryRegistry(IGameInstance instance) {
+        super(IRegistry.class, RegistryID.createRegistryID(instance.getBaseMod().id(), "registryregistry"));
         this.instance = instance;
+        register(this);
     }
 
     @Override
-    public synchronized void register(final IRegistry registered) {
-        if(registryMap.containsKey(registered.getRegistryTypeClass())){
-            return; //already Registered Type
-        }
-        if(stringRegistryMap.containsKey(registered.getID())){
-            return; //id already Registered
+    public void register(final IRegistry registered) {
+        //id or class already Registered
+        if (classRegistryMap.containsKey(registered.getRegistryTypeClass()) ||
+            registryContent.containsKey(registered.getRegistryID())) {
+            return;
         }
 
-        registryMap.put(registered.getRegistryTypeClass(),registered);
-        stringRegistryMap.put(registered.getID(),registered);
-    }
-
-    @Override
-    public IRegistry getByID(final String saveID) {
-        return null;
+        classRegistryMap.put(registered.getRegistryTypeClass(), registered);
+        registryContent.put(registered.getRegistryID(), registered);
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends IRegistrateable> IRegistry<T> getByClass(Class<T> clazz){
-        IRegistry<?> res = registryMap.get(clazz);
-        var regClazz = res.getRegistryTypeClass();
-        if(clazz==regClazz){
+    public <T extends IRegistrable> IRegistry<T> getByClass(Class<T> clazz) {
+        IRegistry<?> res      = classRegistryMap.get(clazz);
+        var          regClazz = res.getRegistryTypeClass();
+        if (clazz == regClazz) {
             return (IRegistry<T>) res;
-        }else{
+        } else {
             return null;
         }
-    }
-
-    @Override
-    public Class<IRegistry> getRegistryTypeClass() {
-        return IRegistry.class;
-    }
-
-    @Override
-    public String getID() {
-        return "";
-    }
-
-    @Override
-    public IMod getContainingMod() {
-        return instance.getBaseMod();
     }
 
 }

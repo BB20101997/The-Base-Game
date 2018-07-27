@@ -1,47 +1,43 @@
 package de.webtwob.the.base.game.main.client;
 
-import de.webtwob.the.base.game.api.gui.GLFW_MainThreadContext;
-import de.webtwob.the.base.game.api.gui.GLFW_Window;
-import de.webtwob.the.base.game.api.service.IBaseMod;
+import de.webtwob.the.base.game.api.gui.IMainThreadContext;
+import de.webtwob.the.base.game.api.gui.IWindow;
+import de.webtwob.the.base.game.api.service.IBaseModFactory;
 
 import java.util.ServiceLoader;
 
 /**
  * Created by BB20101997 on 10. Jul. 2018.
  */
-public class MainClient {
+public class MainClient implements Runnable{
 
-    private GLFW_Window window;
+    private IWindow window;
 
-    private System.Logger logger = System.getLogger(MainClient.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(MainClient.class.getName());
 
-    public static void main(String[] args) {
+    public void run() {
 
-        new MainClient().run();
+        LOGGER.log(System.Logger.Level.TRACE, "Starting Client");
 
-    }
+        window = IWindow.createWindow("The Base Game!");
 
-    private void run() {
+        window.runWithMainThreadContext((IMainThreadContext main) -> main.setVisible(true));
 
-        logger.log(System.Logger.Level.TRACE, "Starting Client");
+        ServiceLoader.load(IBaseModFactory.class).findFirst().ifPresentOrElse(mod -> {
+            LOGGER.log(System.Logger.Level.INFO, () -> "Choose Base Mod: " + mod.get().id());
 
-        window = GLFW_Window.createWindow("The Base Game!");
+            //window.setMainRenderer(mod.get().getClientInstance().getRenderer());
 
-        window.runWithMainThreadContext((GLFW_MainThreadContext main) -> main.setVisible(true));
+            window.setMainRenderer(new MainMenuRenderer());
 
-        ServiceLoader.load(IBaseMod.class).findFirst().ifPresentOrElse(mod -> {
-            logger.log(System.Logger.Level.INFO, () -> "Choose Base Mod: " + mod.getModId());
+            LOGGER.log(System.Logger.Level.INFO,"Starting Render Thread");
 
-            var renderThread = new ClientRenderThread();
+            window.runWithMainThreadContext(IMainThreadContext::startRenderLoop);
 
-            renderThread.setChild(mod.getClientInstance().getRenderer());
-
-            renderThread.start(window);
-
-            logger.log(System.Logger.Level.INFO, "Client Running!");
+            LOGGER.log(System.Logger.Level.INFO, "Client Running!");
 
         }, () -> {
-            logger.log(System.Logger.Level.ERROR, "No IBaseMod found!");
+            LOGGER.log(System.Logger.Level.ERROR, "No IBaseModFactory found!");
             System.exit(0);
         });
 

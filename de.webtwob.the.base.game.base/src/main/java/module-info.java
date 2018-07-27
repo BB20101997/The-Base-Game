@@ -1,3 +1,4 @@
+import de.webtwob.the.base.game.api.service.IBaseModFactory;
 import de.webtwob.the.base.game.base.TheBaseMode;
 
 /**
@@ -8,6 +9,9 @@ module de.webtwob.the.base.game.base {
     requires de.webtwob.the.base.game.api;
     requires org.lwjgl.glfw;
     requires org.lwjgl.opengl;
+    requires org.joml;
+    requires io.netty.all;
+    requires annotations;
 
-    provides de.webtwob.the.base.game.api.service.IBaseMod with TheBaseMode;
+    provides IBaseModFactory with TheBaseMode;
 }

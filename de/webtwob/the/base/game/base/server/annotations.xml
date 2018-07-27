@@ -1,0 +1,5 @@
+<root>
+    <item name='de.webtwob.the.base.game.base.server.ServerNetworkHandler.SocketChannelChannelInitializer SocketChannelChannelInitializer(de.webtwob.the.base.game.api.util.Either&lt;de.webtwob.the.base.game.api.interfaces.IGameInstance.IClientInstance,de.webtwob.the.base.game.api.interfaces.IGameInstance.IServerInstance&gt;) 0'>
+        <annotation name='org.jetbrains.annotations.NotNull'/>
+    </item>
+</root>
